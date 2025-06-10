@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skincare Chatbot</title>
+  <style>
+    :root {
+      --white: #ffffff;
+      --gray-text: #6b7280;
+      --black: #000000;
+      --primary-color: #000000;
+      --input-bg: #f9fafb;
+      --user-msg-bg: #e5e7eb;
+      --bot-msg-bg: #f3f4f6;
+      --border-radius: 0.75rem;
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--white);
+      font-family: var(--font-sans);
+      color: var(--gray-text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px var(--shadow-light);
+      z-index: 100;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 2.25rem;
+      color: var(--black);
+      user-select: none;
+    }
+    nav a {
+      margin-left: 2rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--gray-text);
+      transition: color 0.3s ease;
+    }
+    nav a:hover,
+    nav a:focus {
+      color: var(--black);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.75rem;
+      user-select: none;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--gray-text);
+      user-select: none;
+    }
+
+    .chat-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 12px 32px var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+
+    .messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background: var(--white);
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 1rem 1.5rem;
+      background: var(--bot-msg-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 5px var(--shadow-light);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      user-select: text;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .message.user {
+      align-self: flex-end;
+      background: var(--user-msg-bg);
+      font-weight: 600;
+      border-bottom-right-radius: 2px;
+    }
+    .message.bot {
+      align-self: flex-start;
+      font-style: italic;
+      color: var(--gray-text);
+      border-bottom-left-radius: 2px;
+    }
+    .message:hover {
+      transform: scale(1.03);
+      background-color: #fde68a;
+      cursor: default;
+    }
+
+    .chat-input-form {
+      display: flex;
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 2rem;
+      background: var(--white);
+    }
+    .chat-input-form input[type="text"] {
+      flex-grow: 1;
+      padding: 1rem 1.25rem;
+      font-size: 1.25rem;
+      border: 1px solid #d1d5db;
+      border-radius: var(--border-radius);
+      outline-offset: 2px;
+      font-family: var(--font-sans);
+      transition: border-color 0.3s ease;
+    }
+    .chat-input-form input[type="text"]:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.12);
+    }
+    .chat-input-form button {
+      background: var(--primary-color);
+      border: none;
+      padding: 0 2rem;
+      margin-left: 1rem;
+      border-radius: var(--border-radius);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--white);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .chat-input-form button:hover,
+    .chat-input-form button:focus {
+      background: #555555;
+      outline: none;
+    }
+    .chat-input-form button:disabled {
+      background: #a1a1aa;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-label="Skincare Chatbot Logo">SkinBot</div>
+    <nav aria-label="Primary Navigation">
+      <a href="#hero">Home</a>
+      <a href="#chat">Chat</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="hero">
+      <h1>Your Personal Skincare Chatbot</h1>
+      <p>Ask SkinBot any skincare question and get instant, helpful advice tailored for you.</p>
+    </section>
+
+    <section class="chat-container" id="chat" aria-live="polite" aria-relevant="additions">
+      <div class="messages" id="messages" role="log" aria-live="polite"></div>
+      <form class="chat-input-form" id="chat-form" aria-label="Chat input form">
+        <input
+          type="text"
+          id="user-input"
+          name="user-input"
+          placeholder="Type your question here..."
+          autocomplete="off"
+          required
+          aria-required="true"
+          aria-label="Chat message input"
+          minlength="1"
+          maxlength="200"
+        />
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+    </section>
+  </main>
+
+ <script>
+  (function() {
+    const messagesEl = document.getElementById('messages');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+
+    // Improved dataset with multiple keywords and specific intents
+    const dataset = [
+      {
+        keywords: ["hello", "hi", "hey", "good morning", "good afternoon", "good evening"],
+        answers: ["Hi there! How can I help you with your skincare today?", "Hello! What skincare questions do you have?"],
+        intent: "greeting"
+      },
+      {
+        keywords: ["how are you", "how's it going", "how are you doing"],
+        answers: ["I'm just a program, but I'm excited to help you with skincare!", "I'm here to assist you with all your skincare needs."],
+        intent: "how_are_you"
+      },
+      {
+        keywords: ["acne", "pimple", "breakouts", "blemish"],
+        answers: [
+          "For acne, try using products containing salicylic acid and avoid touching your face.",
+          "Keeping your skin clean and moisturized helps manage acne."
+        ],
+        intent: "acne"
+      },
+      {
+        keywords: ["dry skin", "itchy skin", "flaky skin", "dehydrated skin"],
+        answers: [
+          "For dry skin, use a rich moisturizer and avoid long hot showers.",
+          "Look for ingredients like hyaluronic acid and glycerin to keep your skin hydrated."
+        ],
+        intent: "dry_skin"
+      },
+      {
+        keywords: ["sun protection", "sunscreen", "spf", "sun damage", "sunburn"],
+        answers: [
+          "Always use sunscreen with at least SPF 30 daily for sun protection.",
+          "Reapply sunscreen every 2 hours when outdoors to ensure effective protection."
+        ],
+        intent: "sun_protection"
+      },
+      {
+        keywords: ["vitamin c", "ascorbic acid", "vitamin c serum", "benefits of vitamin c"],
+        answers: [
+          "Vitamin C brightens the skin, reduces dark spots, and boosts collagen production.",
+          "It's a great antioxidant that helps protect your skin from environmental damage."
+        ],
+        intent: "vitamin_c"
+      },
+      {
+        keywords: ["dark circles", "under eye circles", "puffy eyes", "eye bags"],
+        answers: [
+          "Get enough sleep, stay hydrated, and consider using eye creams with caffeine or vitamin K.",
+          "Cold compresses can also help reduce puffiness."
+        ],
+        intent: "dark_circles"
+      },
+      {
+        keywords: ["what is my skin type", "how to know my skin type", "skin type"],
+        answers: [
+          "To determine your skin type, consider if your skin is oily, dry, combination, or sensitive.",
+          "You can also look for signs like shine, dryness, or irritation to identify your skin type."
+        ],
+        intent: "skin_type"
+      },
+      {
+    keywords: ["oily skin", "greasy skin", "shiny skin", "excess oil"],
+    answers: [
+      "For oily skin, it's best to use a gentle foaming cleanser that removes dirt without stripping your skin. Opt for lightweight, oil-free moisturizers to maintain hydration. Ingredients like niacinamide, clay, or salicylic acid can help regulate sebum production. Avoid heavy creams and over-washing, as it can make oiliness worse.",
+      "Managing oily skin involves using non-comedogenic products that won't clog pores. Clay masks once a week can absorb excess oil and detoxify. Look for toners with witch hazel or tea tree oil to help control shine throughout the day. Don't skip moisturizer—hydrated skin can actually reduce oil production."
+    ],
+    intent: "oily_skin"
+  },
+  {
+    keywords: ["combination skin", "t zone oily", "dry cheeks and oily t zone"],
+    answers: [
+      "Combination skin requires balancing care—treat the oily T-zone with oil-controlling products, and hydrate dry areas like cheeks. Use a gentle cleanser and apply different moisturizers or treatments to different areas if needed. Niacinamide and hyaluronic acid are great for addressing both oil and dryness. Avoid harsh ingredients that may irritate either zone.",
+      "With combination skin, it’s helpful to multi-mask—use a clay mask on your oily areas and a hydrating mask on dry patches. Stick to gentle, fragrance-free products. A balancing toner and lightweight moisturizer can help maintain overall harmony. Exfoliate once or twice weekly to manage buildup without irritating sensitive zones."
+    ],
+    intent: "combination_skin"
+  },
+  {
+    keywords: ["sensitive skin", "skin irritation", "redness", "allergic reaction"],
+    answers: [
+      "Sensitive skin reacts easily to fragrances, harsh chemicals, and even weather changes. Stick to gentle, hypoallergenic products and avoid exfoliating too often. Look for calming ingredients like aloe vera, centella asiatica, and oat extract. Always patch-test new products on a small area before full use.",
+      "Managing sensitive skin involves minimizing your skincare routine. Use a mild, fragrance-free cleanser and a soothing moisturizer to keep your skin calm. Avoid hot water and physical exfoliants. Sun protection is also key, so choose a mineral sunscreen with zinc oxide or titanium dioxide."
+    ],
+    intent: "sensitive_skin"
+  },
+  {
+    keywords: ["anti-aging", "wrinkles", "fine lines", "aging skin"],
+    answers: [
+      "To combat aging signs like wrinkles and fine lines, incorporate products with retinol, peptides, and antioxidants into your routine. These ingredients help stimulate collagen and skin renewal. A good night cream and regular use of sunscreen are essential to slow aging. Healthy habits like proper sleep and hydration also make a big difference.",
+      "An anti-aging routine should include retinoids, vitamin C, and hyaluronic acid to keep the skin firm, bright, and moisturized. Don't underestimate the power of sunscreen—it's the most effective anti-aging product. Apply it daily even indoors. Consistency and patience are crucial for long-term results."
+    ],
+    intent: "anti_aging"
+  },
+  {
+    keywords: ["exfoliation", "exfoliate", "dead skin", "scrub", "chemical exfoliant"],
+    answers: [
+      "Exfoliation helps remove dead skin cells, revealing a smoother, brighter complexion. Chemical exfoliants like AHAs and BHAs are often gentler and more effective than physical scrubs. Start with once or twice a week to avoid over-exfoliation. Always follow with moisturizer and sunscreen, as your skin will be more sensitive.",
+      "Proper exfoliation improves product absorption and unclogs pores. Choose exfoliants based on your skin type—lactic acid for dry skin, salicylic acid for oily or acne-prone skin. Avoid scrubbing too harshly, especially if you have sensitive or acne-prone skin. Remember to moisturize afterward to protect your skin barrier."
+    ],
+    intent: "exfoliation"
+  },
+  {
+    keywords: ["moisturizer", "hydration", "hydrating", "moisturizing cream"],
+    answers: [
+      "A good moisturizer helps maintain your skin's protective barrier and prevents water loss. Even oily and acne-prone skin needs hydration—just choose lightweight, non-comedogenic formulas. Look for ingredients like ceramides, glycerin, or hyaluronic acid. Apply moisturizer right after cleansing while your skin is still damp.",
+      "Hydrated skin looks plumper and feels more comfortable throughout the day. If your skin feels tight, flaky, or itchy, it's likely dehydrated. Use richer creams at night and lighter gels in the morning. Avoid alcohol-heavy products that can dry out your skin over time."
+    ],
+    intent: "moisturizer"
+  },
+  {
+    keywords: ["retinol", "retinoid", "vitamin a", "anti-aging retinol"],
+    answers: [
+      "Retinol is a vitamin A derivative that promotes skin renewal and boosts collagen production. It’s great for reducing acne, fine lines, and uneven skin tone. Start using it 2–3 nights a week, and gradually increase as your skin builds tolerance. Always wear SPF during the day when using retinol.",
+      "Retinol can be transformative but also drying, so pair it with a good moisturizer. Avoid using it with exfoliants or vitamin C in the same routine to prevent irritation. Introduce it slowly, and use only at night. If you have sensitive skin, consider starting with a retinol alternative like bakuchiol."
+    ],
+    intent: "retinol"
+  },
+  {
+    keywords: ["double cleansing", "oil cleanser", "cleansing routine"],
+    answers: [
+      "Double cleansing involves first using an oil-based cleanser to remove makeup, sunscreen, and excess sebum. Follow up with a water-based cleanser to clean deeper impurities. This method ensures your skin is thoroughly clean without stripping its natural oils. It's especially useful at night or if you wear heavy products.",
+      "The oil-based cleanser helps break down waterproof products and pollutants, while the second cleanser tackles leftover debris. It’s gentle and effective for all skin types when done right. Choose a mild second cleanser suited to your skin type to avoid over-drying."
+    ],
+    intent: "double_cleansing"
+  },
+  {
+    keywords: ["toner", "what is toner", "facial toner"],
+    answers: [
+      "Toners are liquid skincare products used after cleansing to remove residual impurities and prep your skin for other treatments. They can hydrate, soothe, or balance oil depending on the formula. Alcohol-free toners are best for most skin types to prevent irritation. Pat it into your skin with clean hands or a cotton pad.",
+      "A good toner can help restore your skin’s pH and add a boost of hydration. Look for ingredients like rose water, chamomile, or hyaluronic acid. Avoid harsh astringents unless your skin is very oily. Use it twice daily after cleansing and before serums or moisturizers."
+    ],
+    intent: "toner"
+  },
+  {
+    keywords: ["serum", "what is a serum", "facial serum", "skin serum"],
+    answers: [
+      "Serums are concentrated skincare products designed to target specific issues like dark spots, wrinkles, or dehydration. They contain high levels of active ingredients and penetrate deeper into the skin. Apply a serum after toner and before moisturizer. Use consistently to see long-term benefits.",
+      "Serums can be tailored to your needs—use vitamin C for brightening, hyaluronic acid for hydration, or niacinamide for soothing. A little goes a long way, so use a few drops at a time. Layer correctly with other products to maximize effectiveness."
+    ],
+    intent: "serum"
+  }
+  ];
+
+    function addMessage(text, sender) {
+      const messageEl = document.createElement('div');
+      messageEl.classList.add('message', sender);
+      messageEl.textContent = text;
+      messagesEl.appendChild(messageEl);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function getBotResponse(userText) {
+      const text = userText.toLowerCase();
+      for (const entry of dataset) {
+        if (entry.keywords.some(keyword => text.includes(keyword))) {
+          const answers = entry.answers;
+          return answers[Math.floor(Math.random() * answers.length)];
+        }
+      }
+      return "I'm sorry, I don't have an answer for that. Please ask about skincare routines, products, or concerns!";
+    }
+
+    chatForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const userText = userInput.value.trim();
+      if (!userText) return;
+      addMessage(userText, 'user');
+      userInput.value = '';
+      userInput.focus();
+
+      setTimeout(() => {
+        const botReply = getBotResponse(userText);
+        addMessage(botReply, 'bot');
+      }, 400);
+    });
+
+    // Initial greeting
+    addMessage("Hello! I'm SkinBot, your skincare assistant. How can I help you today?", 'bot');
+  })();
+</script>
+
+
+</body>
+</html>
