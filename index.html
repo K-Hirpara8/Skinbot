@@ -259,9 +259,17 @@
         intent: "goodbye"
       },
       {
-        keywords: ["how are you", "how's it going", "how are you doing","I need suggestions for skin"],
+        keywords: ["how are you", "how's it going", "how are you doing"],
         answers: ["I'm just a program, but I'm excited to help you with skincare!", "I'm here to assist you with all your skincare needs."],
         intent: "how_are_you"
+      },
+      {
+        keywords: ["I need suggestions for skin", "suggestions", "skin suggestions", "recommend me something", "any skincare tips"],
+        answers: [
+          "Sure! Tell me a bit about your skin — is it oily, dry, or sensitive?",
+          "Let’s personalize it — do you struggle more with acne, dryness, or something else?"
+        ],
+        intent: "skin_suggestions"
       },
       {
         keywords: ["acne", "pimple", "breakouts", "blemish"],
